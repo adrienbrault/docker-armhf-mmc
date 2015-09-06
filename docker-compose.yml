@@ -1,0 +1,31 @@
+plex:
+  image: adrienbrault/armhf-plex
+  hostname: <your_plex_server_name>
+  ports:
+   - "32400:32400"
+  volumes:
+   - /data/plex-config:/config
+   - /data/media:/media
+  restart: always
+
+nzbget:
+  image: adrienbrault/armhf-nzbget
+  ports:
+   - "6789:6789"
+  volumes:
+   - /data/nzbget-downloads:/downloads
+   - /data/nzbget-config:/config
+  restart: always
+
+sonarr:
+  image: adrienbrault/armhf-sonarr
+  ports:
+   - "8989:8989"
+  links:
+   - plex
+   - nzbget
+  volumes:
+   - /data/nzbget-downloads:/downloads
+   - /data/media:/media
+   - /data/sonarr-config:/config
+  restart: always
